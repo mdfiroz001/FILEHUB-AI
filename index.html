@@ -818,7 +818,7 @@
     </style>
 <style id="site-enhancement-style">
 .site-ad-slot{margin:16px 0;padding:12px 16px;border:1px dashed var(--border);border-radius:14px;background:linear-gradient(135deg,var(--surface),var(--bg));display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--text-sub);font-size:.78rem}.site-ad-slot strong{color:var(--primary);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}.site-ad-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 5px var(--primary-soft)}.site-welcome{position:fixed;inset:0;z-index:5000;background:rgba(15,23,42,.62);backdrop-filter:blur(8px);display:grid;place-items:center;padding:20px;opacity:0;visibility:hidden;transition:.25s}.site-welcome.show{opacity:1;visibility:visible}.site-welcome-card{width:min(480px,100%);background:var(--surface);border:1px solid var(--border);border-radius:26px;padding:28px;box-shadow:0 25px 80px rgba(0,0,0,.25);transform:translateY(16px) scale(.98);transition:.3s}.site-welcome.show .site-welcome-card{transform:none}.site-welcome-icon{width:54px;height:54px;border-radius:18px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;font-size:1.4rem;margin-bottom:18px}.site-welcome h2{font-family:Outfit;font-size:1.65rem;margin:0 0 10px}.site-welcome p{color:var(--text-sub);line-height:1.7;margin:0 0 22px;white-space:pre-line}.site-welcome-actions{display:flex;gap:10px}.site-welcome-actions a,.site-welcome-actions button{flex:1;text-align:center;padding:12px;border-radius:12px;border:0;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}.site-welcome-actions a{background:var(--primary);color:#fff}.site-welcome-actions button{background:var(--bg);color:var(--text-main)}.notice-inline-cta{margin-left:auto;background:var(--primary);color:#fff;border:0;border-radius:999px;padding:7px 12px;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap}.scrolling-notice-container{display:flex!important;align-items:center;gap:10px}.scrolling-notice-container marquee{flex:1}.assistant-brand{font-weight:700;color:var(--primary)}
-</style></head>
+</style><style>.item-ad-slot{text-decoration:none;cursor:pointer}.item-ad-slot strong{margin-right:auto}</style></head>
 <body>
 
 <header>
@@ -1946,6 +1946,9 @@
                     required_ads: parseInt(promptData.required_ads) || 0,
                     created_at: promptData.created_at || Date.now(),
                     isAIPrompt: true,
+                    ad_enabled: promptData.ad_enabled === true,
+                    ad_label: promptData.ad_label || 'Sponsored',
+                    ad_link: promptData.ad_link || '',
                     prompt_text: promptData.prompt || '',
                     geminiUrl: geminiUrl,
                     detail_photos: promptData.detail_photos || []
@@ -1986,7 +1989,8 @@
                 app.innerHTML = 
                     '<div class="detail-wrapper">' +
                         carouselHTML +
-                        '<div class="detail-header-block">' +
+                        itemAdHTML(item, 'prompt') +
+                        '<div class="detail-header-block">',
                             '<h1 class="detail-title">' + escapeHtmlUser(item.title) + '</h1>' +
                             '<div class="detail-meta-grid">' +
                                 '<span class="meta-pill meta-left"><i class="fas fa-magic"></i> AI Prompt</span>' +
@@ -2038,16 +2042,17 @@
             if (type === 'file') {
                 if (item.description && item.description.trim() !== '') {
                     const desc = DOMPurify.sanitize(marked.parse(item.description));
-                    descHTML = '<div class="detail-desc">' + desc + '</div>';
+                    descHTML = '<div class="detail-desc">' + desc + '</div>' + itemAdHTML(item, 'file');
                 } else {
-                    descHTML = '<div class="detail-desc"><p style="color:var(--text-sub);text-align:center;padding:10px;">— No description available —</p></div>';
+                    descHTML = '<div class="detail-desc"><p style="color:var(--text-sub);text-align:center;padding:10px;">— No description available —</p></div>' + itemAdHTML(item, 'file');
                 }
             }
 
             app.innerHTML = 
                 '<div class="detail-wrapper">' +
                     carouselHTML +
-                    '<div class="detail-header-block">' +
+                    (type === 'banner' ? itemAdHTML(item, 'banner') : '') +
+                    '<div class="detail-header-block">',
                         '<h1 class="detail-title">' + escapeHtmlUser(item.title || 'Untitled') + '</h1>' +
                         '<div class="detail-meta-grid">' +
                             '<span class="meta-pill meta-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>' + (item.file_extension || (type === 'banner' ? 'slider' : 'file')) + '</span>' +
@@ -2596,6 +2601,13 @@
 
     // ==================== SITE BUILDER RUNTIME ====================
     function siteConfig() { return appSettings.site || {}; }
+    function itemAdHTML(item, fallbackKind) {
+        if (!item || item.ad_enabled !== true) return '';
+        const label = escapeHtmlUser(item.ad_label || 'Sponsored');
+        const href = item.ad_link ? escapeHtmlUser(item.ad_link) : '';
+        const body = '<i class="fas fa-rectangle-ad"></i> <strong>' + label + '</strong><span class="site-ad-dot"></span>';
+        return href ? '<a class="site-ad-slot item-ad-slot" href="' + href + '" target="_blank" rel="noopener sponsored" data-item-ad="' + (fallbackKind || 'item') + '">' + body + '</a>' : '<div class="site-ad-slot item-ad-slot" data-item-ad="' + (fallbackKind || 'item') + '">' + body + '</div>';
+    }
     function siteAd(kind) {
         const site = siteConfig(), ads = site.ads || {};
         if (ads[kind] === false) return '';
@@ -2630,8 +2642,8 @@
         applySiteBranding(); enhanceNotice();
         if (!window.__welcomeShown) { window.__welcomeShown=true; setTimeout(showSiteWelcome,450); }
         const route=window.location.pathname;
-        if (route.indexOf('/file/')===0 && !document.querySelector('[data-ad-slot="file"]')) { const target=document.querySelector('.detail-wrapper .detail-desc') || document.querySelector('.detail-wrapper'); if(target) target.insertAdjacentHTML('afterend',siteAd('file')); }
-        if (route.indexOf('/prompt/')===0 && !document.querySelector('[data-ad-slot="prompt"]')) { const target=document.querySelector('.detail-wrapper .carousel-wrap') || document.querySelector('.detail-wrapper'); if(target) target.insertAdjacentHTML('afterend',siteAd('prompt')); }
+        if (route.indexOf('/file/')===0 && !document.querySelector('[data-ad-slot="file"]') && !document.querySelector('[data-item-ad="file"]')) { const target=document.querySelector('.detail-wrapper .detail-desc') || document.querySelector('.detail-wrapper'); if(target) target.insertAdjacentHTML('afterend',siteAd('file')); }
+        if (route.indexOf('/file/ai-prompt-')===0 && !document.querySelector('[data-ad-slot="prompt"]')) { const target=document.querySelector('.detail-wrapper .carousel-wrap') || document.querySelector('.detail-wrapper'); if(target) target.insertAdjacentHTML('afterend',siteAd('prompt')); }
         if (route==='/' && !document.querySelector('[data-ad-slot="home"]')) { const target=document.querySelector('.section-header'); if(target) target.insertAdjacentHTML('beforebegin',siteAd('home')); }
     }
     const __filehubOriginalLoadData = loadData;

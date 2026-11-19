@@ -284,7 +284,7 @@
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-sub); }
     </style>
-<style id="site-builder-style">.builder-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px}.eyebrow{font-size:.7rem;letter-spacing:.16em;color:var(--primary);font-weight:800}.builder-muted{color:var(--text-sub);margin:0;max-width:650px}.live-pill{background:#dcfce7;color:#15803d;border-radius:999px;padding:8px 12px;font-size:.75rem;font-weight:700;white-space:nowrap}.live-pill i{font-size:.5rem;margin-right:5px}.builder-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}.builder-card{margin:0;border:1px solid var(--border);box-shadow:0 10px 30px rgba(15,23,42,.05)}.builder-card-title{display:flex;gap:12px;align-items:flex-start;margin-bottom:20px}.builder-card-title>i{width:38px;height:38px;border-radius:12px;background:var(--primary-light);color:var(--primary);display:grid;place-items:center}.builder-card-title h3{font-family:Outfit;margin:0 0 3px;font-size:1.08rem}.builder-card-title p{margin:0;color:var(--text-sub);font-size:.78rem}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}.color-input{width:100%;height:42px;padding:4px;border:1px solid var(--border);border-radius:8px;background:var(--bg)}.toggle-row{display:flex;gap:10px;align-items:center;padding:11px 0;border-top:1px solid var(--border);font-size:.88rem;font-weight:600}.toggle-row input{accent-color:var(--primary);width:17px;height:17px}.builder-savebar{position:sticky;bottom:0;margin-top:20px;padding:15px 18px;background:var(--surface);border:1px solid var(--border);border-radius:14px;display:flex;justify-content:space-between;align-items:center;gap:15px;z-index:5;color:var(--text-sub);font-size:.8rem}.builder-savebar .btn{gap:8px}@media(max-width:600px){.builder-head,.builder-savebar{flex-direction:column;align-items:stretch}.two-col{grid-template-columns:1fr}.live-pill{align-self:flex-start}} </style></head>
+<style id="site-builder-style">.builder-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px}.eyebrow{font-size:.7rem;letter-spacing:.16em;color:var(--primary);font-weight:800}.builder-muted{color:var(--text-sub);margin:0;max-width:650px}.live-pill{background:#dcfce7;color:#15803d;border-radius:999px;padding:8px 12px;font-size:.75rem;font-weight:700;white-space:nowrap}.live-pill i{font-size:.5rem;margin-right:5px}.builder-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}.builder-card{margin:0;border:1px solid var(--border);box-shadow:0 10px 30px rgba(15,23,42,.05)}.builder-card-title{display:flex;gap:12px;align-items:flex-start;margin-bottom:20px}.builder-card-title>i{width:38px;height:38px;border-radius:12px;background:var(--primary-light);color:var(--primary);display:grid;place-items:center}.builder-card-title h3{font-family:Outfit;margin:0 0 3px;font-size:1.08rem}.builder-card-title p{margin:0;color:var(--text-sub);font-size:.78rem}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}.color-input{width:100%;height:42px;padding:4px;border:1px solid var(--border);border-radius:8px;background:var(--bg)}.toggle-row{display:flex;gap:10px;align-items:center;padding:11px 0;border-top:1px solid var(--border);font-size:.88rem;font-weight:600}.toggle-row input{accent-color:var(--primary);width:17px;height:17px}.builder-savebar{position:sticky;bottom:0;margin-top:20px;padding:15px 18px;background:var(--surface);border:1px solid var(--border);border-radius:14px;display:flex;justify-content:space-between;align-items:center;gap:15px;z-index:5;color:var(--text-sub);font-size:.8rem}.builder-savebar .btn{gap:8px}@media(max-width:600px){.builder-head,.builder-savebar{flex-direction:column;align-items:stretch}.two-col{grid-template-columns:1fr}.live-pill{align-self:flex-start}} </style><style id="item-ad-admin-style">.item-ad-box{margin:16px 0;padding:14px;border:1px dashed var(--primary);border-radius:12px;background:var(--primary-light)}.item-ad-heading{display:flex;align-items:center;gap:8px;color:var(--primary);font-weight:800;font-size:.9rem;margin-bottom:6px}.item-ad-box .toggle-row{border-top:0;padding:8px 0 12px}</style></head>
 <body>
 
 <div id="app">
@@ -821,6 +821,10 @@
                 '<input type="number" id="prompt-required-ads" class="form-input" value="' + (parseInt(prompt.required_ads) || 0) + '" min="0">' +
                 '<p style="font-size:0.75rem;color:var(--text-sub);margin-top:5px;">💡 0 দিলে ফ্রি, 1+ দিলে ঐ পরিমাণ Ads দেখতে হবে।</p>' +
             '</div>' +
+            '<div class="item-ad-box"><div class="item-ad-heading"><i class="fas fa-rectangle-ad"></i><span>এই AI prompt-এর image-এর নিচে Ad</span></div>' +
+            '<label class="toggle-row"><input type="checkbox" id="prompt-ad-enabled" ' + (prompt.ad_enabled === true ? 'checked' : '') + '><span>এই prompt-এর ad চালু রাখুন</span></label>' +
+            '<div class="form-group"><label class="form-label">Ad label</label><input type="text" id="prompt-ad-label" class="form-input" value="' + esc(prompt.ad_label || 'Sponsored') + '"></div>' +
+            '<div class="form-group"><label class="form-label">Ad link (optional)</label><input type="url" id="prompt-ad-link" class="form-input" value="' + esc(prompt.ad_link || '') + '" placeholder="https://your-ad-link.com"></div></div>' +
             '<div class="form-group">' +
                 '<label class="form-label">Sample Image URL</label>' +
                 '<input type="url" id="prompt-sample-image" class="form-input" value="' + esc(prompt.sample_image || '') + '" oninput="previewSampleImage()">' +
@@ -885,6 +889,9 @@
                 title: title,
                 prompt: promptText,
                 required_ads: requiredAds,
+                ad_enabled: document.getElementById('prompt-ad-enabled').checked,
+                ad_label: document.getElementById('prompt-ad-label').value.trim() || 'Sponsored',
+                ad_link: document.getElementById('prompt-ad-link').value.trim(),
                 sample_image: sampleImage,
                 detail_photos: detailPhotos,
                 created_at: (isEdit && prompts[index]) ? (prompts[index].created_at || Date.now()) : Date.now()
@@ -1307,6 +1314,10 @@
                 '<p style="font-size:0.75rem;color:var(--text-sub);margin-top:5px;">Markdown: # Heading, **bold**, - list, [link](url), quote, code, ---</p>' +
             '</div>' +
             '<div class="form-group"><label class="form-label">Thumbnail URL</label><input type="url" id="file-thumbnail" class="form-input" value="' + esc(file.thumbnail_url || '') + '" required></div>' +
+            '<div class="item-ad-box"><div class="item-ad-heading"><i class="fas fa-rectangle-ad"></i><span>এই File-এর description-এর নিচে Ad</span></div>' +
+            '<label class="toggle-row"><input type="checkbox" id="file-ad-enabled" ' + (file.ad_enabled === true ? 'checked' : '') + '><span>এই file-এর ad চালু রাখুন</span></label>' +
+            '<div class="form-group"><label class="form-label">Ad label</label><input type="text" id="file-ad-label" class="form-input" value="' + esc(file.ad_label || 'Sponsored') + '" placeholder="Sponsored"></div>' +
+            '<div class="form-group"><label class="form-label">Ad link (optional)</label><input type="url" id="file-ad-link" class="form-input" value="' + esc(file.ad_link || '') + '" placeholder="https://your-ad-link.com"></div></div>' +
             '<div class="form-group"><label class="form-label">Download URL</label><input type="url" id="file-download-url" class="form-input" value="' + esc(file.download_url || '') + '" required></div>' +
             '<div class="grid grid-cols-2 gap-4">' +
                 '<div class="form-group"><label class="form-label">Extension</label><input type="text" id="file-extension" class="form-input" value="' + esc(file.file_extension || '.zip') + '" required></div>' +
@@ -1361,6 +1372,9 @@
         const fileData = {
             title: title,
             description: document.getElementById('file-description').value,
+            ad_enabled: document.getElementById('file-ad-enabled').checked,
+            ad_label: document.getElementById('file-ad-label').value.trim() || 'Sponsored',
+            ad_link: document.getElementById('file-ad-link').value.trim(),
             thumbnail_url: document.getElementById('file-thumbnail').value,
             download_url: document.getElementById('file-download-url').value,
             file_extension: document.getElementById('file-extension').value,
@@ -1417,6 +1431,10 @@
             '<p style="font-size:0.75rem;color:var(--text-sub);margin-top:5px;">💡 1200×630 px recommended</p></div>' +
             '<div class="form-group"><label class="form-label">Target Link (Optional)</label>' +
             '<input type="url" id="banner-download-url" class="form-input" value="' + esc(banner.download_url || '') + '" placeholder="https://example.com/page"></div>' +
+            '<div class="item-ad-box"><div class="item-ad-heading"><i class="fas fa-rectangle-ad"></i><span>এই Banner image-এর নিচে Ad</span></div>' +
+            '<label class="toggle-row"><input type="checkbox" id="banner-ad-enabled" ' + (banner.ad_enabled === true ? 'checked' : '') + '><span>এই banner-এর ad চালু রাখুন</span></label>' +
+            '<div class="form-group"><label class="form-label">Ad label</label><input type="text" id="banner-ad-label" class="form-input" value="' + esc(banner.ad_label || 'Sponsored') + '" placeholder="Sponsored"></div>' +
+            '<div class="form-group"><label class="form-label">Ad link (optional)</label><input type="url" id="banner-ad-link" class="form-input" value="' + esc(banner.ad_link || '') + '" placeholder="https://your-ad-link.com"></div></div>' +
             '<div class="flex justify-end gap-3 mt-4">' +
                 '<button type="button" class="btn btn-danger" onclick="closeModal()">Cancel</button>' +
                 '<button type="submit" class="btn btn-success" id="save-banner-btn"><i class="fas fa-save mr-2"></i> Save Banner</button>' +
@@ -1444,6 +1462,9 @@
             title: document.getElementById('banner-title').value,
             thumbnail_url: document.getElementById('banner-thumbnail').value,
             download_url: document.getElementById('banner-download-url').value,
+            ad_enabled: document.getElementById('banner-ad-enabled').checked,
+            ad_label: document.getElementById('banner-ad-label').value.trim() || 'Sponsored',
+            ad_link: document.getElementById('banner-ad-link').value.trim(),
             created_at: existingBanner.created_at || Date.now()
         };
         try {
